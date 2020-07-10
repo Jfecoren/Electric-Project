@@ -1,5 +1,16 @@
 #!/usr/bin/env python
 
+'''
+1. Aparecen titulos
+2. Aparecen las propiedades que debe cumplir una funcion para ser de distribucion de probabilidad
+3. Aparece un grafico con el comportamiento gaussiano
+4. Area bajo la curva
+5. Ecuacion tipica de PDF
+
+
+'''
+
+
 
 from big_ol_pile_of_manim_imports import *
 
@@ -22,11 +33,11 @@ class PDFVar(GraphScene):
 
 
     def construct(self):
-        #Presentacion en pantalla
+        #Presentacion en pantalla 
         
         #Variables a Presentar
-        title1 = TextMobject("{\\Large Funcion de Densidad de Probabilidad}")
-        title2 = TextMobject("Area Bajo la Curva")
+        title1 = TextMobject("{\\Large Función de Densidad de Probabilidad}")
+        title2 = TextMobject("Área bajo la curva")
         eq1 = TexMobject(r"f(x)")
         eq2 = TexMobject(r"\int_{a}^{b}", r"f(x)", "dx")
         eq3 = TexMobject(r"P(a \leq x \leq b) =")
@@ -120,7 +131,6 @@ class PDFVar(GraphScene):
             self.x_axis_labels.add(tex)
        
         self.play(
-            Write(self.x_axis_labels),
             Write(self.x_axis),
             Write(self.y_axis)
         )

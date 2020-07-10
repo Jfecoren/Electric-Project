@@ -1,6 +1,14 @@
 #!/usr/bin/env python
 
 
+'''
+1. Aparecen los titulos
+2. Aparecen ecuaciones que describen la funcion
+3. Las ecuaciones que se requieren para encontrar la ecuacion fundmental del  teorema de bayers se despejan/cambian de color
+4. Se encuentra la ecuacion
+
+'''
+
 from big_ol_pile_of_manim_imports import *
 
 #from manimlib.imports import *
