@@ -17,7 +17,7 @@ from threading import Thread
 
 #Variables para el calculo de las probabilidades
 N = 10                   #Numero de llegadas
-tiempoTranscurso = 2 #Tiempo entre cada aparicion de objeto (llegada)
+tiempoTranscurso = 2 #Tiempo entre cada aparicion/desaparicion de objeto (llegada/muerte)
 
 def nacimiento(self, objetoC, time=1, i=0):
         self.play(ShowCreation(objetoC), run_time = time/4)
