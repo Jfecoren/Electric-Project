@@ -79,7 +79,7 @@ class Markov(Scene):
             t[j] -= 1
             
             
-        self.play(ShowCreation(title1))
+        self.play(ShowCreation(title1))                     #Se crean los titulos
         self.wait(2)
         self.play(FadeOut(title1), FadeIn(title2))
         self.wait(2)
@@ -92,43 +92,35 @@ class Markov(Scene):
         obL = 0
         obS = 0
         
-        for recorrido in range(len(t)):
+        for recorrido in range(len(t)):                                 #For que va a recorrer el vector t para reconocer si hay 1 o -1
         
-            if t[recorrido] == 1:
-                if obL == 0:
+            if t[recorrido] == 1:                                               #Si hay 1, agregara un objeto
+                if obL == 0:                                                        #Agrega el objeto inicial para evitar colisiones en el codigo entre los objetos
                     self.play(ShowCreation(circles[0]), run_time = 0.5)
                     self.play(circles[0].move_to, serviceSquare.get_center())
-                elif circles[obS] in self.mobjects: 
+                elif circles[obS] in self.mobjects:                         #Si el objeto que se esta sriviendo anteriormente, sigue en pantalla, el objeto de llegada se coloca en la fila
                     self.play(ShowCreation(circles[obL]), run_time = 0.5)
                     self.play(circles[obL].next_to, circles[obL - 1].get_center()+LEFT*2)
                         
-                else:
+                else:                                                                   #Si ya no hay un objeto en pantalla, va directamente a la estacion de servicio
                     self.play(ShowCreation(circles[obL]), run_time = 0.5)
                     self.play(circles[obL].move_to, serviceSquare.get_center())
                     
                 obL += 1
         
         
-            if t[recorrido] == -1:
-                
+            if t[recorrido] == -1:                                          #Si hay un -1 en el vector, el objeto actualmente sirviendose, se retira
                 #self.play(circles[obS].shift, RIGHT)
                 self.play(FadeOut(circles[obS]))
                 self.remove(circles[obS])
                 
-                for corrimiento in range(N, 0, -1):
-                
+                for corrimiento in range(N, 0, -1):             #Movemos los objetos que estaban en cola, una posicion siguiente, cuando un objeto ya termino de ser servido
                     if obS < N - corrimiento:
                         if  circles[obS + corrimiento] in self.mobjects:
                             self.play(circles[obS+corrimiento].move_to, circles[obS+corrimiento-1].get_center())
-                        
-            #    if obS < N - 1:
-             #       if  circles[obS + 1] in self.mobjects:
-              #          self.play(circles[obS+1].move_to, circles[obS].get_center())
-                
-                
+                                        
                 obS += 1
-                pass
-            self.wait(tiempoEspera)
+            self.wait(tiempoEspera)                                 #Tiempo de espera aproximado entre cada recorrido del vector t.
         
         
         
