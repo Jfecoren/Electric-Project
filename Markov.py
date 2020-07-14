@@ -38,7 +38,7 @@ class Markov(Scene):
         serviceSquare.move_to(RIGHT*3)
         circles = np.full([N], None)
         for i in range(0, len(circles)):
-            circles[i] = Circle(radius = 0.2, color = RED)
+            circles[i] = Circle(radius = 0.25, color = RED)
             circles[i].set_fill(RED, opacity = 1)
             circles[i].move_to(LEFT*5)
         
@@ -114,10 +114,10 @@ class Markov(Scene):
                 self.play(FadeOut(circles[obS]))
                 self.remove(circles[obS])
                 
-                for corrimiento in range(N, 0, -1):             #Movemos los objetos que estaban en cola, una posicion siguiente, cuando un objeto ya termino de ser servido
-                    if obS < N - corrimiento:
+                for corrimiento in range(0, N):             #Movemos los objetos que estaban en cola, una posicion siguiente, cuando un objeto ya termino de ser servido
+                    if obS < N-corrimiento:
                         if  circles[obS + corrimiento] in self.mobjects:
-                            self.play(circles[obS+corrimiento].move_to, circles[obS+corrimiento-1].get_center())
+                            self.play(circles[obS+corrimiento].shift, RIGHT*1.5)
                                         
                 obS += 1
             self.wait(tiempoEspera)                                 #Tiempo de espera aproximado entre cada recorrido del vector t.
