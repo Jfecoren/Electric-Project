@@ -22,7 +22,7 @@ class MonteCarlo(Scene):
         countSquare = 0
         
         #titulos
-        title1 = TextMobject("Metodo de MonteCarlo")
+        title1 = TextMobject("Método de Monte-Carlo")
         #Ecuaciones
         eq1 = TexMobject(r"\frac{A_c}{A_s}", r" = ", r"\frac{\pi r^2}{l^2}" , r" = ", r"\frac{\pi}{4}")
         eq1.move_to(LEFT*4)                             #Definimos la posicion inicial

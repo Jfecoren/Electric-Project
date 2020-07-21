@@ -2,8 +2,9 @@
 
 from big_ol_pile_of_manim_imports import *
 import numpy as np
+import math
 
-N = 20                  #Cantidad de Puntos
+N = 10                  #Cantidad de Puntos
 graphTime = 10  #Tiempo en que dura creando la grafica
 
 class SmoothGraphFromSetPoints(VMobject):
@@ -19,16 +20,16 @@ class DiscreteGraphFromSetPoints(VMobject):
 class vTransform(GraphScene):
     CONFIG = {
         "x_min": 0,
-        "x_max": 30,
-        "x_axis_width": 15,
-        "x_axis_label": "$x$",
+        "x_max": 10,
+        "x_axis_width": 10,
+        "x_axis_label": "$f_x(X)$",
         
         "y_min": 0,
-        "y_max": 6,
-        "y_axis_height": 6,
-        "y_axis_label": "$y$",
+        "y_max": 5,
+        "y_axis_height": 5,
+        "y_axis_label": "$f_y(X)$",
         
-        "graph_origin": DOWN*3+ LEFT*6,
+        "graph_origin": DOWN*3+ LEFT*5,
         "default_graph_colors": [YELLOW, GREEN, RED],
         "default_derivative_color": BLUE,
         "area_opacity": 1,
@@ -40,15 +41,15 @@ class vTransform(GraphScene):
     #Definimos la funcion
 
     
-    
-    def get_points(self, coords):
+    #Convierte las coordenadas de la pantalla, a coordenadas en la grafica
+    def get_points_from_coords(self, coords):
         return [
             self.coords_to_point(px, py)
             for px,py in coords
         ]
     
     def get_dots(self,coords, radius = 0.1):
-        points = self.get_points(coords)
+        points = self.get_points_from_coords(coords)
         dots = VGroup(*[
             Dot(radius = radius).move_to([px,py,pz])
             for px,py,pz in points
@@ -61,35 +62,50 @@ class vTransform(GraphScene):
         
         coords_y_x = np.full([N], 0.0)
         coords_x = np.full([N], 0)
-        dots_x = np.full([N], None)
         for i in range(0, N):
             coords_x[i] = i
-            coords_y_x[i] = np.sqrt(i)
+            coords_y_x[i] = math.exp(-0.25*(i-5)**2)
             
         coords = [[px,py] for px,py in zip(coords_x, coords_y_x)]
         
-        points = self.get_points(coords)
-        graph = DiscreteGraphFromSetPoints(points, color = BLUE)
+        points = self.get_points_from_coords(coords)
+        graph = SmoothGraphFromSetPoints(points, color = BLUE)
         dots = self.get_dots(coords)
+        self.play(ShowCreation(dots), run_time = graphTime)
         
-        self.play(ShowCreation(graph), ShowCreation(dots), run_time = graphTime)
     
-    def show_function_graph_Y(self):
+    def function_graph_X1(self):
+        ancho = 0.01
+        graph_X1 = self.get_graph(lambda x: np.sqrt(x), x_min = 0, x_max = 10)
+        self.play(ShowCreation(graph_X1), run_time = 10)
+        rectan = np.full([10],None)
+        for i in range(0, 10):
+            rectan[i] = self.get_riemann_rectangles(graph_X1, x_min = i-ancho/2.0, x_max = i+ancho/2.0, dx = ancho)
+            rectan[i].set_color(RED)
+            self.play(ShowCreation(rectan[i]), run_time = 2)
         
-        coords_y_x = np.full([N], 0.0)
-        coords_x = np.full([N], 0)
-        dots_x = np.full([N], None)
-        for i in range(1, N):
-            coords_x[i] = i
-            coords_y_x[i] = 1/np.sqrt(i)
-            
-        coords = [[px,py] for px,py in zip(coords_x, coords_y_x)]
+        lines = np.full([10], None)        
+        for i in range(0, 10):
+            lines[i] = Line(start = np.array([-5,-2+(np.sqrt(i)-1),0]), end = np.array([math.exp(-0.25*(i-5)**2) - 5.0,-2+(np.sqrt(i)-1),0]))
+            self.play(Write(lines[i]), run_time = 0.5)
+        self.wait(2)
         
-        points = self.get_points(coords)
-        graph = DiscreteGraphFromSetPoints(points, color = BLUE)
-        dots = self.get_dots(coords)
+    def function_graph_X2(self):
+        graph_X2 = self.get_graph(lambda x: 0.1*x**2, x_min = 0, x_max = 10)
+        self.play(ShowCreation(graph_X2), run_time = 10)
+    
+    
+    def discrete_rectangles(self):
+        ancho = 0.04
+        def func(x):
+            return math.exp(-0.25*(x-5)**2)
+        graph_01 = self.get_graph(func, x_min = 0, x_max = 9)
+        rectan = np.full([10],None)
+        for i in range(1, 10):
+            rectan[i] = self.get_riemann_rectangles(graph_01, x_min = i-ancho/2.0, x_max = i+ancho/2.0, dx = ancho)
+            rectan[i].set_color(WHITE)
+            self.play(ShowCreation(rectan[i]), run_time = 2)
         
-        self.play(ShowCreation(graph), ShowCreation(dots), run_time = graphTime)
     
     def construct(self):
     
@@ -119,10 +135,14 @@ class vTransform(GraphScene):
         self.play(FadeOut(title1))
     
         self.play(Write(eq1), run_time = 1.5)
-        self.show_function_graph_X()
-        self.wait(3)
+        self.discrete_rectangles()
+        self.wait(2)
         self.play(Transform(eq1, eq2), run_time = 1.5)
-        self.show_function_graph_Y()
+        self.wait(3)
+        self.function_graph_X1()
+        #self.function_graph_X2()
     
+        
     
+        self.wait(5)
     
